@@ -1,0 +1,104 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cmake *)",
+      "Bash(make *)",
+      "Bash(gcc *)",
+      "Bash(g++ *)",
+      "Bash(git status)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git branch *)",
+      "Bash(grep *)",
+      "Bash(head *)"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(rm -rf ~)",
+      "Bash(curl * | sh)",
+      "Bash(curl * | bash)",
+      "Bash(wget * | sh)",
+      "Bash(eval *)",
+      "Bash(sudo rm -rf *)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(git push --force *)",
+      "Bash(git reset --hard *)",
+      "Bash(git rebase *)",
+      "Bash(rm -rf *)",
+      "Bash(gh pr create *)",
+      "Bash(pip install *)"
+    ]
+  },
+  "enabledPlugins": {
+    "learning-output-style@claude-plugins-official": true
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/memory-persistence/session-start.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/memory-persistence/session-end.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/skills/continuous-learning/evaluate-session.sh"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/memory-persistence/pre-compact.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/skills/strategic-compact/suggest-compact.sh"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/english-correction/english-correction.sh",
+            "timeout": 300
+          }
+        ]
+      }
+    ]
+  }
+}
