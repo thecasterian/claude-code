@@ -2,12 +2,24 @@
 # Reference: https://torch.vision/posts/claude-english-lecturer-hook
 
 INPUT="$(cat)"
-INPUT_PROMPT="$(echo "$INPUT" | jq '.prompt')"
-ORIGINAL_PROMPT="$INPUT_PROMPT"
+RAW_PROMPT="$(echo "$INPUT" | jq -r '.prompt')"
 
 if [[ -n "$REWRITER_LOCK" ]]; then
     exit 0
 fi
+
+# Opt-in: only activate when prompt starts with @en
+if [[ ! "$RAW_PROMPT" =~ ^@en[[:space:]] ]] && [[ "$RAW_PROMPT" != "@en" ]]; then
+    exit 0
+fi
+
+# Strip the @en prefix for English analysis
+STRIPPED_PROMPT="${RAW_PROMPT#@en}"
+STRIPPED_PROMPT="${STRIPPED_PROMPT#"${STRIPPED_PROMPT%%[![:space:]]*}"}"
+
+# Preserve original variables for downstream compatibility
+INPUT_PROMPT="$(echo "$INPUT" | jq '.prompt')"
+ORIGINAL_PROMPT="$INPUT_PROMPT"
 
 TARGET_LANGUAGE="Korean"
 JSON_SCHEMA='
@@ -72,7 +84,7 @@ JSON_SCHEMA='
 }
 '
 
-INPUT_PROMPT="\
+ANALYSIS_PROMPT="\
 You are a supportive, encouraging English coach for a Korean developer. Analyze the prompt below and return structured JSON.
 
 Rules:
@@ -87,7 +99,7 @@ Rules:
 5. tip: One memorable tip in $TARGET_LANGUAGE (1 sentence, max 30 words) about the most useful pattern. If no corrections, share a useful English expression tip.
 6. is_korean_only: true if the entire prompt is written in Korean (no English words except technical terms like API, git, etc.).
 7. english_translation: If is_korean_only is true, provide a natural, professional English translation of the Korean prompt. This helps the user learn how to express the same idea in English. If is_korean_only is false, return an empty string.
-8. notable_expressions: Provide up to 3 notable expressions at the advanced level of English, regardless of whether there are corrections. If the prompt is too short, skip this part.
+8. notable_expressions: Provide up to 3 notable expressions at the advanced level of English, regardless of whether there are corrections.
    - For English input: highlight good phrases/patterns the user chose well
    - For Korean input: highlight interesting translation choices made
    - Each item: expression (the phrase), explanation (brief Korean explanation, max 20 words, why it's good or interesting)
@@ -95,7 +107,7 @@ Rules:
 Focus on patterns Korean speakers commonly struggle with: articles (a/the), prepositions, singular/plural, tense consistency, word order.
 
 <PROMPT>
-$INPUT_PROMPT
+$STRIPPED_PROMPT
 </PROMPT>\
 "
 
@@ -105,7 +117,7 @@ RESPONSE="$( \
     --output-format json \
     --no-session-persistence \
     --json-schema "$JSON_SCHEMA" \
-    -p "$INPUT_PROMPT"
+    -p "$ANALYSIS_PROMPT"
 )"
 
 STRUCTURED_OUTPUT="$(echo "$RESPONSE" | jq -r '.structured_output')"
@@ -191,7 +203,9 @@ echo -e "\n[$(date '+%Y-%m-%d %H:%M')]\n$OUTPUT_PROMPT" >> ~/.claude/logs/englis
 FORMATTED_OUTPUT="
 ★ English Lesson ────────────────────────────────
 $OUTPUT_PROMPT
-─────────────────────────────────────────────────"
+─────────────────────────────────────────────────
+
+[Hook note: The user prefixed their prompt with @en to request English correction. Ignore the @en prefix and process the rest of the prompt normally.]"
 jq -n --arg msg "$FORMATTED_OUTPUT" '{"systemMessage": $msg}'
 
 exit 0

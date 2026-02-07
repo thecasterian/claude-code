@@ -62,13 +62,9 @@ Located in `~/.claude/agents/`:
 ## Personal Preferences
 
 ### Making Changes
-- No features beyond what was asked
-- Don't "improve" adjacent code, comments, or formatting
-- Don't refactor things that aren't broken
-- Match existing style, even if you'd do it differently
-- No "flexibility" or "configurability" that wasn't requested
-- Don't remove pre-existing dead code unless asked
-- Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify
+- When implementing new APIs or constructors, always update existing test files to use them unless the user says otherwise. Do not argue that tests 'shouldn't use' new APIs — if the user asks, do it.
+- When the user interrupts or redirects, stop immediately and follow the new direction. Do not continue the previous approach. For files or code that are inapplicable to the project, prefer deletion over conversion unless told otherwise.
+- Before proposing a design or adding new structs/classes, confirm the architecture with the user first. Do not add objects to parent structs or reference types that don't exist without checking. Present a brief plan and wait for approval before implementing.
 
 ### Git
 - Keep commit messages a compact single line representing changes the best
