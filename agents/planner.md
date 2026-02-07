@@ -97,6 +97,7 @@ Create detailed steps with:
 5. **Enable Testing**: Structure changes to be easily testable
 6. **Think Incrementally**: Each step should be verifiable
 7. **Document Decisions**: Explain why, not just what
+8. **No Uncertainty**: State your assumptions explicitly - if uncertain, ask
 
 ## When Planning Refactors
 

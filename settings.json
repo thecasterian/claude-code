@@ -9,8 +9,16 @@
       "Bash(git log *)",
       "Bash(git diff *)",
       "Bash(git branch *)",
+      "Bash(git stash *)",
+      "Bash(git stash pop *)",
+      "Bash(cd *)",
+      "Bash(find *)",
       "Bash(grep *)",
-      "Bash(head *)"
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(wc *)"
     ],
     "deny": [
       "Bash(rm -rf /)",

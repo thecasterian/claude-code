@@ -48,7 +48,7 @@ Include specific examples of how to fix issues.
 - Large files (>800 lines)
 - Deep nesting (>4 levels)
 - Missing error handling (try/catch)
-- console.log statements
+- `printf`-like statements without a logging library
 - Mutation patterns
 - Missing tests for new code
 
@@ -90,15 +90,3 @@ const apiKey = process.env.API_KEY;  // ✓ Good
 - ✅ Approve: No CRITICAL or HIGH issues
 - ⚠️ Warning: MEDIUM issues only (can merge with caution)
 - ❌ Block: CRITICAL or HIGH issues found
-
-## Project-Specific Guidelines (Example)
-
-Add your project-specific checks here. Examples:
-- Follow MANY SMALL FILES principle (200-400 lines typical)
-- No emojis in codebase
-- Use immutability patterns (spread operator)
-- Verify database RLS policies
-- Check AI integration error handling
-- Validate cache fallback behavior
-
-Customize based on your project's `CLAUDE.md` or skill files.
