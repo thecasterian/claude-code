@@ -62,9 +62,13 @@ Located in `~/.claude/agents/`:
 ## Personal Preferences
 
 ### Making Changes
-- When implementing new APIs or constructors, always update existing test files to use them unless the user says otherwise. Do not argue that tests 'shouldn't use' new APIs — if the user asks, do it.
-- When the user interrupts or redirects, stop immediately and follow the new direction. Do not continue the previous approach. For files or code that are inapplicable to the project, prefer deletion over conversion unless told otherwise.
-- Before proposing a design or adding new structs/classes, confirm the architecture with the user first. Do not add objects to parent structs or reference types that don't exist without checking. Present a brief plan and wait for approval before implementing.
+- When implementing new APIs or constructors, always update existing test files to use them unless the user says otherwise
+- When the user interrupts or redirects, stop immediately and follow the new direction
+- When proposing a design or adding new structs/classes, do not add objects to parent structs or reference types that don't exist without checking
+
+### System
+- Prefer absolute paths rather than relative paths
+- The default user directory for documents is `$HOME/문서` (Korean locale) or `$HOME/Documents` (English locale)
 
 ### Git
 - Keep commit messages a compact single line representing changes the best
