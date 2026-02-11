@@ -62,6 +62,7 @@ Located in `~/.claude/agents/`:
 ## Personal Preferences
 
 ### Making Changes
+- Before writing any code, outline your plan and wait for the user's approval
 - When implementing new APIs or constructors, always update existing test files to use them unless the user says otherwise
 - When the user interrupts or redirects, stop immediately and follow the new direction
 - When proposing a design or adding new structs/classes, do not add objects to parent structs or reference types that don't exist without checking
@@ -71,9 +72,13 @@ Located in `~/.claude/agents/`:
 - The default user directory for documents is `$HOME/문서` (Korean locale) or `$HOME/Documents` (English locale)
 
 ### Git
+- Don't add you as a co-author
 - Keep commit messages a compact single line representing changes the best
 - Always test locally before committing
 - Small, focused commits
+
+### Agents
+- When spawning a subagent, always give path informations (e.g., the project root, source directories, default user directories) in the prompt
 
 ### MCPs
 - Always use Context7 MCP for library/API documentation, code generation, setup or configuration steps without asking explicitly

@@ -27,8 +27,12 @@
 # - Transitioning from research/exploration to implementation
 # - Plan has been finalized
 
-# Track tool call count (increment in a temp file)
-COUNTER_FILE="/tmp/claude-tool-count-$$"
+# Read JSON input from stdin (Claude Code provides session_id, tool_name, etc.)
+INPUT=$(cat)
+SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // "unknown"')
+
+# Track tool call count (increment in a temp file keyed to session)
+COUNTER_FILE="/tmp/claude-tool-count-${SESSION_ID}"
 THRESHOLD=${COMPACT_THRESHOLD:-50}
 
 # Initialize or increment counter
