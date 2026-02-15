@@ -76,6 +76,7 @@ Located in `~/.claude/agents/`:
 - Keep commit messages a compact single line representing changes the best
 - Always test locally before committing
 - Small, focused commits
+- Include the brief list of changes only in the PR body
 
 ### Agents
 - When spawning a subagent, always give path informations (e.g., the project root, source directories, default user directories) in the prompt
