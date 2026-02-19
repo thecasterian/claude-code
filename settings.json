@@ -1,6 +1,7 @@
 {
   "permissions": {
     "allow": [
+      "Read(*)",
       "Bash(cmake *)",
       "Bash(make *)",
       "Bash(gcc *)",
@@ -20,7 +21,8 @@
       "Bash(tail *)",
       "Bash(ls *)",
       "Bash(cat *)",
-      "Bash(wc *)"
+      "Bash(wc *)",
+      "Bash(sort *)"
     ],
     "deny": [
       "Bash(rm -rf /)",

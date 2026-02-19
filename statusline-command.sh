@@ -75,6 +75,17 @@ get_five_hour_utilization() {
 
 five_hour_pct=$(get_five_hour_utilization)
 
+# ANSI color helpers
+color_for_pct() {
+    local pct_int=${1%.*}
+    if [ "$pct_int" -ge 90 ] 2>/dev/null; then
+        printf '\033[31m'  # red
+    elif [ "$pct_int" -ge 75 ] 2>/dev/null; then
+        printf '\033[33m'  # yellow
+    fi
+}
+RESET=$'\033[0m'
+
 # Build status line parts
 status_parts=()
 
@@ -93,7 +104,12 @@ fi
 # Context window bar (handle null/empty at session start)
 if [ -n "$used_pct" ] && [ "$used_pct" != "null" ]; then
     bar=$(generate_bar_graph "$used_pct")
-    status_parts+=("Context: ${bar} ${used_pct}%")
+    ctx_color=$(color_for_pct "$used_pct")
+    if [ -n "$ctx_color" ]; then
+        status_parts+=("${ctx_color}Context: ${bar} ${used_pct}%${RESET}")
+    else
+        status_parts+=("Context: ${bar} ${used_pct}%")
+    fi
 else
     bar=$(generate_bar_graph 0)
     status_parts+=("Context: ${bar}")
@@ -103,7 +119,12 @@ fi
 if [ -n "$five_hour_pct" ] && [ "$five_hour_pct" != "null" ]; then
     five_bar=$(generate_bar_graph "$five_hour_pct")
     five_hour_int=${five_hour_pct%.*}
-    status_parts+=("5h limit: ${five_bar} ${five_hour_int}%")
+    fh_color=$(color_for_pct "$five_hour_int")
+    if [ -n "$fh_color" ]; then
+        status_parts+=("${fh_color}5h limit: ${five_bar} ${five_hour_int}%${RESET}")
+    else
+        status_parts+=("5h limit: ${five_bar} ${five_hour_int}%")
+    fi
 else
     five_bar=$(generate_bar_graph 0)
     status_parts+=("5h limit: ${five_bar}")

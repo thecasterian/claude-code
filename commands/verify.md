@@ -10,8 +10,8 @@ Execute verification in this exact order:
    - Run the build command for this project
    - If it fails, report errors and STOP
 
-2. **Type Check**
-   - Run TypeScript/type checker
+2. **Type/Static Analysis Check**
+   - Run type checker or static analysis for this project
    - Report all errors with file:line
 
 3. **Lint Check**
@@ -23,11 +23,7 @@ Execute verification in this exact order:
    - Report pass/fail count
    - Report coverage percentage
 
-5. **Console.log Audit**
-   - Search for console.log in source files
-   - Report locations
-
-6. **Git Status**
+5. **Git Status**
    - Show uncommitted changes
    - Show files modified since last commit
 
@@ -43,7 +39,6 @@ Types:    [OK/X errors]
 Lint:     [OK/X issues]
 Tests:    [X/Y passed, Z% coverage]
 Secrets:  [OK/X found]
-Logs:     [OK/X console.logs]
 
 Ready for PR: [YES/NO]
 ```

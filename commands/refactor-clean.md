@@ -3,9 +3,9 @@
 Safely identify and remove dead code with test verification:
 
 1. Run dead code analysis tools:
-   - knip: Find unused exports and files
-   - depcheck: Find unused dependencies
-   - ts-prune: Find unused TypeScript exports
+   - cppcheck: Static analysis for unused functions and variables
+   - include-what-you-use: Find unnecessary #include directives
+   - Custom grep patterns: Find unreferenced symbols
 
 2. Generate comprehensive report in .reports/dead-code-analysis.md
 

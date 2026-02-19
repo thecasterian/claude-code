@@ -15,13 +15,11 @@ Comprehensive security and quality review of uncommitted changes:
 - Path traversal risks
 
 **Code Quality (HIGH):**
-- Functions > 100 lines
+- Functions > 300 lines
 - Files > 800 lines
 - Nesting depth > 4 levels
 - Missing error handling
-- console.log statements
 - TODO/FIXME comments
-- Missing JSDoc for public APIs
 
 **Best Practices (MEDIUM):**
 - Mutation patterns (use immutable instead)

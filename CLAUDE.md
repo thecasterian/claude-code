@@ -69,7 +69,8 @@ Located in `~/.claude/agents/`:
 
 ### System
 - Prefer absolute paths rather than relative paths
-- The default user directory for documents is `$HOME/문서` (Korean locale) or `$HOME/Documents` (English locale)
+- When working with file paths containing non-ascii characters, never transliterate, URL-encode, or mangle them
+- Use the exact Unicode characters in all path operations, including when spawning sub-agents
 
 ### Git
 - Don't add you as a co-author
@@ -77,9 +78,6 @@ Located in `~/.claude/agents/`:
 - Always test locally before committing
 - Small, focused commits
 - Include the brief list of changes only in the PR body
-
-### Agents
-- When spawning a subagent, always give path informations (e.g., the project root, source directories, default user directories) in the prompt
 
 ### MCPs
 - Always use Context7 MCP for library/API documentation, code generation, setup or configuration steps without asking explicitly
