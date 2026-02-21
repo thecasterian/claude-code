@@ -1,0 +1,27 @@
+# Explicit security denials (defense in depth)
+.credentials.json
+*.key
+*.pem
+*.p12
+.env
+.env.*
+history.jsonl
+stats-cache.json
+
+# Deny all, then whitelist
+*
+!agents/
+!agents/**
+!commands/
+!commands/**
+!hooks/
+!hooks/**
+!rules/
+!rules/**
+!skills/
+!skills/**
+!.gitignore
+!CLAUDE.md
+!README.md
+!settings.json
+!statusline-command.sh
