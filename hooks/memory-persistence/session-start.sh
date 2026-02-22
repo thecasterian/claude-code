@@ -21,12 +21,22 @@ SESSIONS_DIR="${HOME}/.claude/sessions"
 LEARNED_DIR="${HOME}/.claude/skills/learned"
 
 # Check for recent session files (last 7 days)
-recent_sessions=$(find "$SESSIONS_DIR" -name "*.tmp" -mtime -7 2>/dev/null | wc -l | tr -d ' ')
+recent_sessions=$(find "$SESSIONS_DIR" -name "*-session.tmp" -mtime -7 2>/dev/null | wc -l | tr -d ' ')
 
 if [ "$recent_sessions" -gt 0 ]; then
   latest=$(ls -t "$SESSIONS_DIR"/*.tmp 2>/dev/null | head -1)
   echo "[SessionStart] Found $recent_sessions recent session(s)" >&2
   echo "[SessionStart] Latest: $latest" >&2
+
+  # Inject latest session content into Claude's context via stdout
+  if [ -n "$latest" ] && [ -f "$latest" ]; then
+    content=$(cat "$latest")
+    # Only inject if the session has actual content (not the blank template)
+    if ! echo "$content" | grep -q '\[Session context goes here\]'; then
+      echo "Previous session summary:"
+      echo "$content"
+    fi
+  fi
 fi
 
 # Check for learned skills
