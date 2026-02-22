@@ -74,10 +74,12 @@ Located in `~/.claude/agents/`:
 
 ### Git
 - Don't add you as a co-author
-- Keep commit messages a compact single line representing changes the best
-- Always test locally before committing
-- Small, focused commits
+- Keep commit messages a compact single line
+- Commit messages must be imperative and start with an uppercase letter
+- Don't use Conventional Commits
+- If the uncommitted changes are unrelated, split them into multiple commits
 - Include the brief list of changes only in the PR body
+- Attach appropriate labels when creating an issue or a PR
 
 ### MCPs
 - Always use Context7 MCP for library/API documentation, code generation, setup or configuration steps without asking explicitly
