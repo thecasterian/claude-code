@@ -5,12 +5,16 @@
       "Bash(make *)",
       "Bash(gcc *)",
       "Bash(g++ *)",
-      "Bash(git status)",
+      "Bash(git status*)",
+      "Bash(git -C * status*)",
       "Bash(git log *)",
+      "Bash(git -C * log *)",
       "Bash(git diff *)",
+      "Bash(git -C * diff *)",
       "Bash(git branch *)",
-      "Bash(git stash *)",
-      "Bash(git stash pop *)",
+      "Bash(git -C * branch *)",
+      "Bash(git stash*)",
+      "Bash(git -C * stash*)",
       "Bash(gh issue list *)",
       "Bash(gh pr view *)",
       "Bash(gh label list *)",
@@ -35,21 +39,18 @@
     ],
     "ask": [
       "Bash(git push *)",
+      "Bash(git -C * push *)",
       "Bash(git push --force *)",
+      "Bash(git -C * push --force *)",
       "Bash(git reset --hard *)",
+      "Bash(git -C * reset --hard *)",
       "Bash(git rebase *)",
+      "Bash(git -C * rebase *)",
       "Bash(rm -rf *)",
       "Bash(gh pr create *)",
       "Bash(gh pr edit *)",
       "Bash(pip install *)"
     ]
-  },
-  "enabledPlugins": {
-    "learning-output-style@claude-plugins-official": true
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "bash ~/.claude/statusline-command.sh"
   },
   "hooks": {
     "SessionStart": [
@@ -106,5 +107,13 @@
         ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "learning-output-style@claude-plugins-official": true,
+    "clarify@team-attention-plugins": true
   }
 }
