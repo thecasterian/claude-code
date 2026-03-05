@@ -18,7 +18,7 @@ This command invokes the **tdd-guide** agent to enforce test-driven development 
 
 Use `/tdd` when:
 - Implementing new features
-- Adding new functions/classes
+- Adding new functions/components
 - Fixing bugs (write test that reproduces bug first)
 - Refactoring existing code
 - Building critical business logic
@@ -48,7 +48,7 @@ REPEAT:   Next feature/scenario
 
 ## Example Usage
 
-````markdown
+```
 User: /tdd I need a function to calculate market liquidity score
 
 Agent (tdd-guide):
@@ -56,80 +56,79 @@ Agent (tdd-guide):
 
 ## Step 1: Define Interface (SCAFFOLD)
 
-```cpp
-// liquidity.h
-#pragma once
-#include <chrono>
+```typescript
+// lib/liquidity.ts
+export interface MarketData {
+  totalVolume: number
+  bidAskSpread: number
+  activeTraders: number
+  lastTradeTime: Date
+}
 
-struct MarketData {
-    double totalVolume;
-    double bidAskSpread;
-    int activeTraders;
-    std::chrono::system_clock::time_point lastTradeTime;
-};
-
-// Calculate liquidity score (0-100)
-double calculateLiquidityScore(const MarketData& market);
+export function calculateLiquidityScore(market: MarketData): number {
+  // TODO: Implementation
+  throw new Error('Not implemented')
+}
 ```
 
 ## Step 2: Write Failing Test (RED)
 
-```cpp
-// test_liquidity.cpp
-#include <gtest/gtest.h>
-#include "liquidity.h"
+```typescript
+// lib/liquidity.test.ts
+import { calculateLiquidityScore } from './liquidity'
 
-using namespace std::chrono;
+describe('calculateLiquidityScore', () => {
+  it('should return high score for liquid market', () => {
+    const market = {
+      totalVolume: 100000,
+      bidAskSpread: 0.01,
+      activeTraders: 500,
+      lastTradeTime: new Date()
+    }
 
-TEST(LiquidityTest, ReturnsHighScoreForLiquidMarket) {
-    MarketData market{
-        .totalVolume = 100000,
-        .bidAskSpread = 0.01,
-        .activeTraders = 500,
-        .lastTradeTime = system_clock::now()
-    };
+    const score = calculateLiquidityScore(market)
 
-    double score = calculateLiquidityScore(market);
+    expect(score).toBeGreaterThan(80)
+    expect(score).toBeLessThanOrEqual(100)
+  })
 
-    EXPECT_GT(score, 80.0);
-    EXPECT_LE(score, 100.0);
-}
+  it('should return low score for illiquid market', () => {
+    const market = {
+      totalVolume: 100,
+      bidAskSpread: 0.5,
+      activeTraders: 2,
+      lastTradeTime: new Date(Date.now() - 86400000) // 1 day ago
+    }
 
-TEST(LiquidityTest, ReturnsLowScoreForIlliquidMarket) {
-    MarketData market{
-        .totalVolume = 100,
-        .bidAskSpread = 0.5,
-        .activeTraders = 2,
-        .lastTradeTime = system_clock::now() - hours(24)
-    };
+    const score = calculateLiquidityScore(market)
 
-    double score = calculateLiquidityScore(market);
+    expect(score).toBeLessThan(30)
+    expect(score).toBeGreaterThanOrEqual(0)
+  })
 
-    EXPECT_LT(score, 30.0);
-    EXPECT_GE(score, 0.0);
-}
+  it('should handle edge case: zero volume', () => {
+    const market = {
+      totalVolume: 0,
+      bidAskSpread: 0,
+      activeTraders: 0,
+      lastTradeTime: new Date()
+    }
 
-TEST(LiquidityTest, HandlesZeroVolume) {
-    MarketData market{
-        .totalVolume = 0,
-        .bidAskSpread = 0,
-        .activeTraders = 0,
-        .lastTradeTime = system_clock::now()
-    };
+    const score = calculateLiquidityScore(market)
 
-    double score = calculateLiquidityScore(market);
-
-    EXPECT_DOUBLE_EQ(score, 0.0);
-}
+    expect(score).toBe(0)
+  })
+})
 ```
 
 ## Step 3: Run Tests - Verify FAIL
 
 ```bash
-cd build && make && ./run_tests
+npm test lib/liquidity.test.ts
 
-[FAILED] LiquidityTest.ReturnsHighScoreForLiquidMarket
-  Undefined reference to calculateLiquidityScore
+FAIL lib/liquidity.test.ts
+  ✕ should return high score for liquid market (2 ms)
+    Error: Not implemented
 
 1 test failed, 0 passed
 ```
@@ -138,49 +137,44 @@ cd build && make && ./run_tests
 
 ## Step 4: Implement Minimal Code (GREEN)
 
-```cpp
-// liquidity.cpp
-#include "liquidity.h"
-#include <algorithm>
-#include <cmath>
+```typescript
+// lib/liquidity.ts
+export function calculateLiquidityScore(market: MarketData): number {
+  // Handle zero volume edge case
+  if (market.totalVolume === 0) {
+    return 0
+  }
 
-double calculateLiquidityScore(const MarketData& market) {
-    // Handle zero volume edge case
-    if (market.totalVolume == 0) {
-        return 0.0;
-    }
+  // Calculate component scores (0-100 scale)
+  const volumeScore = Math.min(market.totalVolume / 1000, 100)
+  const spreadScore = Math.max(100 - (market.bidAskSpread * 1000), 0)
+  const traderScore = Math.min(market.activeTraders / 10, 100)
 
-    // Calculate component scores (0-100 scale)
-    double volumeScore = std::min(market.totalVolume / 1000.0, 100.0);
-    double spreadScore = std::max(100.0 - (market.bidAskSpread * 1000.0), 0.0);
-    double traderScore = std::min(static_cast<double>(market.activeTraders) / 10.0, 100.0);
+  // Recent activity bonus
+  const hoursSinceLastTrade = (Date.now() - market.lastTradeTime.getTime()) / (1000 * 60 * 60)
+  const recencyScore = Math.max(100 - (hoursSinceLastTrade * 10), 0)
 
-    // Recent activity bonus
-    auto now = std::chrono::system_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::hours>(
-        now - market.lastTradeTime);
-    double hoursSinceLastTrade = duration.count();
-    double recencyScore = std::max(100.0 - (hoursSinceLastTrade * 10.0), 0.0);
+  // Weighted average
+  const score = (
+    volumeScore * 0.4 +
+    spreadScore * 0.3 +
+    traderScore * 0.2 +
+    recencyScore * 0.1
+  )
 
-    // Weighted average
-    double score =
-        volumeScore * 0.4 +
-        spreadScore * 0.3 +
-        traderScore * 0.2 +
-        recencyScore * 0.1;
-
-    return std::clamp(score, 0.0, 100.0);
+  return Math.min(Math.max(score, 0), 100) // Clamp to 0-100
 }
 ```
 
 ## Step 5: Run Tests - Verify PASS
 
 ```bash
-cd build && make && ./run_tests
+npm test lib/liquidity.test.ts
 
-[PASSED] LiquidityTest.ReturnsHighScoreForLiquidMarket
-[PASSED] LiquidityTest.ReturnsLowScoreForIlliquidMarket
-[PASSED] LiquidityTest.HandlesZeroVolume
+PASS lib/liquidity.test.ts
+  ✓ should return high score for liquid market (3 ms)
+  ✓ should return low score for illiquid market (2 ms)
+  ✓ should handle edge case: zero volume (1 ms)
 
 3 tests passed
 ```
@@ -189,54 +183,55 @@ cd build && make && ./run_tests
 
 ## Step 6: Refactor (IMPROVE)
 
-```cpp
-// liquidity.cpp - Refactored with constants and better readability
-#include "liquidity.h"
-#include <algorithm>
-#include <cmath>
+```typescript
+// lib/liquidity.ts - Refactored with constants and better readability
+const WEIGHTS = {
+  VOLUME: 0.4,
+  SPREAD: 0.3,
+  TRADERS: 0.2,
+  RECENCY: 0.1,
+} as const
 
-namespace {
-    constexpr double WEIGHT_VOLUME = 0.4;
-    constexpr double WEIGHT_SPREAD = 0.3;
-    constexpr double WEIGHT_TRADERS = 0.2;
-    constexpr double WEIGHT_RECENCY = 0.1;
+const SCALE_FACTORS = {
+  VOLUME: 1000,
+  SPREAD: 1000,
+  TRADERS: 10,
+  RECENCY_PENALTY: 10,
+} as const
 
-    constexpr double SCALE_VOLUME = 1000.0;
-    constexpr double SCALE_SPREAD = 1000.0;
-    constexpr double SCALE_TRADERS = 10.0;
-    constexpr double RECENCY_PENALTY = 10.0;
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max)
 }
 
-double calculateLiquidityScore(const MarketData& market) {
-    if (market.totalVolume == 0) return 0.0;
+export function calculateLiquidityScore(market: MarketData): number {
+  if (market.totalVolume === 0) return 0
 
-    double volumeScore = std::min(market.totalVolume / SCALE_VOLUME, 100.0);
-    double spreadScore = std::clamp(100.0 - (market.bidAskSpread * SCALE_SPREAD), 0.0, 100.0);
-    double traderScore = std::min(static_cast<double>(market.activeTraders) / SCALE_TRADERS, 100.0);
+  const volumeScore = Math.min(market.totalVolume / SCALE_FACTORS.VOLUME, 100)
+  const spreadScore = clamp(100 - (market.bidAskSpread * SCALE_FACTORS.SPREAD), 0, 100)
+  const traderScore = Math.min(market.activeTraders / SCALE_FACTORS.TRADERS, 100)
 
-    auto now = std::chrono::system_clock::now();
-    auto hours = std::chrono::duration_cast<std::chrono::hours>(
-        now - market.lastTradeTime).count();
-    double recencyScore = std::clamp(100.0 - (hours * RECENCY_PENALTY), 0.0, 100.0);
+  const hoursSinceLastTrade = (Date.now() - market.lastTradeTime.getTime()) / (1000 * 60 * 60)
+  const recencyScore = clamp(100 - (hoursSinceLastTrade * SCALE_FACTORS.RECENCY_PENALTY), 0, 100)
 
-    double weightedScore =
-        volumeScore * WEIGHT_VOLUME +
-        spreadScore * WEIGHT_SPREAD +
-        traderScore * WEIGHT_TRADERS +
-        recencyScore * WEIGHT_RECENCY;
+  const weightedScore =
+    volumeScore * WEIGHTS.VOLUME +
+    spreadScore * WEIGHTS.SPREAD +
+    traderScore * WEIGHTS.TRADERS +
+    recencyScore * WEIGHTS.RECENCY
 
-    return std::clamp(weightedScore, 0.0, 100.0);
+  return clamp(weightedScore, 0, 100)
 }
 ```
 
 ## Step 7: Verify Tests Still Pass
 
 ```bash
-cd build && make && ./run_tests
+npm test lib/liquidity.test.ts
 
-[PASSED] LiquidityTest.ReturnsHighScoreForLiquidMarket
-[PASSED] LiquidityTest.ReturnsLowScoreForIlliquidMarket
-[PASSED] LiquidityTest.HandlesZeroVolume
+PASS lib/liquidity.test.ts
+  ✓ should return high score for liquid market (3 ms)
+  ✓ should return low score for illiquid market (2 ms)
+  ✓ should handle edge case: zero volume (1 ms)
 
 3 tests passed
 ```
@@ -246,23 +241,17 @@ cd build && make && ./run_tests
 ## Step 8: Check Coverage
 
 ```bash
-# Build with coverage
-cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
-make && ./run_tests
+npm test -- --coverage lib/liquidity.test.ts
 
-# Generate report
-lcov --capture --directory . --output-file coverage.info
-genhtml coverage.info --output-directory coverage_report
-
-File           | Lines  | Funcs  | Branches
----------------|--------|--------|----------
-liquidity.cpp  | 100%   | 100%   | 100%
+File           | % Stmts | % Branch | % Funcs | % Lines
+---------------|---------|----------|---------|--------
+liquidity.ts   |   100   |   100    |   100   |   100
 
 Coverage: 100% ✅ (Target: 80%)
 ```
 
 ✅ TDD session complete!
-````
+```
 
 ## TDD Best Practices
 
@@ -280,7 +269,7 @@ Coverage: 100% ✅ (Target: 80%)
 - ❌ Write too much code at once
 - ❌ Ignore failing tests
 - ❌ Test implementation details (test behavior)
-- ❌ Mock everything (prefer integration tests where possible)
+- ❌ Mock everything (prefer integration tests)
 
 ## Test Types to Include
 
@@ -294,7 +283,12 @@ Coverage: 100% ✅ (Target: 80%)
 - API endpoints
 - Database operations
 - External service calls
-- Multi-class interactions
+- React components with hooks
+
+**E2E Tests** (use `/e2e` command):
+- Critical user flows
+- Multi-step processes
+- Full stack integration
 
 ## Coverage Requirements
 

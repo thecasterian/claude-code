@@ -1,8 +1,8 @@
 ---
 name: security-reviewer
 description: Security vulnerability detection and remediation specialist. Use PROACTIVELY after writing code that handles user input, authentication, file I/O, or sensitive data. Flags buffer overflows, memory leaks, injection vulnerabilities, unsafe functions, and common C/C++ security issues.
-tools: Read, Write, Edit, Bash, Grep, Glob
-model: opus
+tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
+model: sonnet
 ---
 
 # Security Reviewer

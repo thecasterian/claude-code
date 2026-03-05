@@ -34,6 +34,7 @@
       "Bash(curl * | sh)",
       "Bash(curl * | bash)",
       "Bash(wget * | sh)",
+      "Bash(wget * | bash)",
       "Bash(eval *)",
       "Bash(sudo rm -rf *)"
     ],
@@ -71,15 +72,6 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/memory-persistence/session-end.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/skills/continuous-learning/evaluate-session.sh"
           }
         ]
       }
