@@ -14,7 +14,6 @@
 
 ### Stop
 - **memory-persistence**: Saves session memory for future use
-- **continuous-learning**: Evaluates session for reusable patterns
 
 ### PreCompact
 - **memory-persistence**: Persists memory before context window compaction
@@ -28,17 +27,17 @@ Use with caution:
 - Enable for trusted, well-defined plans
 - Disable for exploratory work
 - Never use dangerously-skip-permissions flag
-- Configure `allowedTools` in `~/.claude.json` instead
+- Configure `permissions.allow` in `~/.claude/settings.json` instead
 
-## TodoWrite Best Practices
+## Task Tracking Best Practices
 
-Use TodoWrite tool to:
+Use TaskCreate/TaskUpdate/TaskList/TaskGet tools to:
 - Track progress on multi-step tasks
 - Verify understanding of instructions
 - Enable real-time steering
 - Show granular implementation steps
 
-Todo list reveals:
+Task list reveals:
 - Out of order steps
 - Missing items
 - Extra unnecessary items

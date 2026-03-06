@@ -1,6 +1,6 @@
 # Test Coverage
 
-Analyze test coverage, identify gaps, and generate missing tests to reach 80%+ coverage.
+Analyze test coverage, identify gaps, and generate missing tests for under-covered code.
 
 ## Step 1: Detect Test Framework
 
@@ -18,7 +18,7 @@ Analyze test coverage, identify gaps, and generate missing tests to reach 80%+ c
 
 1. Run the coverage command
 2. Parse the output (JSON summary or terminal output)
-3. List files **below 80% coverage**, sorted worst-first
+3. List files with low coverage, sorted worst-first
 4. For each under-covered file, identify:
    - Untested functions or methods
    - Missing branch coverage (if/else, switch, error paths)
@@ -45,7 +45,7 @@ For each under-covered file, generate tests following this priority:
 
 1. Run the full test suite — all tests must pass
 2. Re-run coverage — verify improvement
-3. If still below 80%, repeat Step 3 for remaining gaps
+3. If gaps remain, repeat Step 3
 
 ## Step 5: Report
 

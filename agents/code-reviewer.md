@@ -47,8 +47,8 @@ These MUST be flagged — they can cause real damage:
 - **Large functions** (>300 lines) — Split into smaller, focused functions
 - **Large files** (>800 lines) — Extract modules by responsibility
 - **Deep nesting** (>4 levels) — Use early returns, extract helpers
-- **Missing error handling** — Unhandled promise rejections, empty catch blocks
-- **Mutation patterns** — Prefer immutable operations (spread, map, filter)
+- **Missing error handling** — Unchecked return values, ignored error codes
+- **Missing const** — Parameters and variables that should be const-qualified
 - **Debug logging statements** — Remove debug logging before merge
 - **Missing tests** — New code paths without test coverage
 - **Dead code** — Commented-out code, unused imports, unreachable branches
@@ -56,11 +56,11 @@ These MUST be flagged — they can cause real damage:
 ### Performance (MEDIUM)
 
 - **Inefficient algorithms** — O(n^2) when O(n log n) or O(n) is possible
-- **Unnecessary re-renders** — Missing React.memo, useMemo, useCallback
-- **Large bundle sizes** — Importing entire libraries when tree-shakeable alternatives exist
+- **Unnecessary copies** — Missing move semantics, pass-by-value for large objects
+- **Excessive allocations** — Heap allocations in hot loops, missing reserve()
 - **Missing caching** — Repeated expensive computations without memoization
-- **Unoptimized images** — Large images without compression or lazy loading
-- **Synchronous I/O** — Blocking operations in async contexts
+- **Blocking I/O** — Synchronous I/O in performance-critical paths
+- **Unused includes** — Heavy headers that slow compilation
 
 ### Best Practices (LOW)
 
@@ -68,7 +68,7 @@ These MUST be flagged — they can cause real damage:
 - **Missing documentation for public APIs** — Exported functions without documentation
 - **Poor naming** — Single-letter variables (x, tmp, data) in non-trivial contexts
 - **Magic numbers** — Unexplained numeric constants
-- **Inconsistent formatting** — Mixed semicolons, quote styles, indentation
+- **Inconsistent formatting** — Mixed naming conventions, brace styles, indentation
 
 ## Review Output Format
 
@@ -76,12 +76,12 @@ Organize findings by severity. For each issue:
 
 ```
 [CRITICAL] Hardcoded API key in source
-File: src/api/client.ts:42
+File: src/client.cpp:42
 Issue: API key "sk-abc..." exposed in source code. This will be committed to git history.
-Fix: Move to environment variable and add to .gitignore/.env.example
+Fix: Move to environment variable and add to .gitignore
 
-  const apiKey = "sk-abc123";           // BAD
-  const apiKey = process.env.API_KEY;   // GOOD
+  const char* apiKey = "sk-abc123";           // BAD
+  const char* apiKey = std::getenv("API_KEY"); // GOOD
 ```
 
 ### Summary Format
@@ -112,10 +112,10 @@ Verdict: WARNING — 2 HIGH issues should be resolved before merge.
 When available, also check project-specific conventions from `CLAUDE.md` or project rules:
 
 - File size limits (e.g., 200-400 lines typical, 800 max)
-- Emoji policy (many projects prohibit emojis in code)
-- Immutability requirements (spread operator over mutation)
-- Database policies (RLS, migration patterns)
-- Error handling patterns (custom error classes, error boundaries)
-- State management conventions (Zustand, Redux, Context)
+- Naming conventions (PascalCase, snake_case, project-specific prefixes)
+- Const correctness and RAII requirements
+- Memory management patterns (smart pointers, ownership semantics)
+- Error handling patterns (error codes, exceptions, PetscErrorCode)
+- Build system conventions (CMake targets, include paths)
 
 Adapt your review to the project's established patterns. When in doubt, match what the rest of the codebase does.

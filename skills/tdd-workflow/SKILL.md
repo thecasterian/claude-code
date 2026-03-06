@@ -1,11 +1,11 @@
 ---
 name: tdd-workflow
-description: Use this skill when writing new features, fixing bugs, or refactoring code. Enforces test-driven development with 80%+ coverage including unit and integration tests.
+description: Use this skill when writing new features, fixing bugs, or refactoring code. Enforces test-driven development including unit and integration tests.
 ---
 
 # Test-Driven Development Workflow
 
-This skill ensures all code development follows TDD principles with comprehensive test coverage.
+This skill ensures all code development follows TDD principles.
 
 ## When to Activate
 
@@ -20,8 +20,7 @@ This skill ensures all code development follows TDD principles with comprehensiv
 ### 1. Tests BEFORE Code
 ALWAYS write tests first, then implement code to make tests pass.
 
-### 2. Coverage Requirements
-- Minimum 80% coverage (unit + integration)
+### 2. Thoroughness
 - All edge cases covered
 - Error scenarios tested
 - Boundary conditions verified
@@ -131,18 +130,6 @@ Improve code quality while keeping tests green:
 - Improve naming
 - Optimize performance
 - Enhance readability
-
-### Step 7: Verify Coverage
-```bash
-# Build with coverage flags
-cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
-make && ./run_tests
-
-# Generate coverage report
-lcov --capture --directory . --output-file coverage.info
-genhtml coverage.info --output-directory coverage_report
-# Verify 80%+ coverage achieved
-```
 
 ## Testing Patterns
 
@@ -299,35 +286,6 @@ TEST(ExternalAPITest, HandlesTimeoutGracefully) {
 }
 ```
 
-## Test Coverage Verification
-
-### Run Coverage Report
-```bash
-# Build with coverage
-cmake -DCMAKE_BUILD_TYPE=Debug \
-      -DCMAKE_CXX_FLAGS="--coverage -fprofile-arcs -ftest-coverage" ..
-make
-
-# Run tests
-./run_tests
-
-# Generate report
-lcov --capture --directory . --output-file coverage.info
-lcov --remove coverage.info '/usr/*' '*/test/*' --output-file coverage.info
-genhtml coverage.info --output-directory coverage_report
-```
-
-### Coverage Thresholds (CMake)
-```cmake
-# In CMakeLists.txt
-option(ENABLE_COVERAGE "Enable coverage reporting" OFF)
-
-if(ENABLE_COVERAGE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
-endif()
-```
-
 ## Common Testing Mistakes to Avoid
 
 ### Don't Test Implementation Details
@@ -425,11 +383,8 @@ jobs:
 7. **Test Error Paths** - Not just happy paths
 8. **Keep Tests Fast** - Unit tests < 50ms each
 9. **Clean Up After Tests** - No side effects
-10. **Review Coverage Reports** - Identify gaps
-
 ## Success Metrics
 
-- 80%+ code coverage achieved
 - All tests passing (green)
 - No skipped or disabled tests
 - Fast test execution (< 30s for unit tests)

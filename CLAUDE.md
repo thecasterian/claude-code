@@ -22,11 +22,10 @@ Detailed guidelines are in `~/.claude/rules/`:
 | Rule File | Contents |
 |-----------|----------|
 | security.md | Security checks, secret management |
-| coding-style.md | Immutability, file organization, error handling |
-| testing.md | TDD workflow, 80% coverage requirement |
-| git-workflow.md | Commit format, PR workflow |
+| coding-style.md | Const correctness, RAII, file organization, error handling |
+| testing.md | TDD workflow, test types |
 | agents.md | Agent orchestration, when to use which agent |
-| patterns.md | API response, repository patterns |
+| patterns.md | Skeleton projects, project bootstrapping |
 | performance.md | Model selection, context management |
 
 ---

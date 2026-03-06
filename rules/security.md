@@ -12,49 +12,7 @@ Before ANY commit:
 - [ ] Path traversal prevention
 - [ ] Error messages don't leak sensitive data
 
-## Secret Management
-
-```cpp
-// NEVER: Hardcoded secrets
-const char* apiKey = "sk-proj-xxxxx";
-
-// ALWAYS: Environment variables
-const char* apiKey = std::getenv("OPENAI_API_KEY");
-
-if (apiKey == nullptr) {
-    throw std::runtime_error("OPENAI_API_KEY not configured");
-}
-```
-
-## Safe String Handling
-
-```cpp
-// NEVER: Unsafe functions
-strcpy(buffer, user_input);  // Buffer overflow!
-printf(user_input);          // Format string vulnerability!
-
-// ALWAYS: Safe alternatives
-strncpy(buffer, user_input, sizeof(buffer) - 1);
-buffer[sizeof(buffer) - 1] = '\0';
-printf("%s", user_input);
-
-// BEST: Use std::string
-std::string buffer = user_input;
-std::cout << user_input << std::endl;
-```
-
-## Memory Safety
-
-```cpp
-// NEVER: Raw new/delete
-int* data = new int[100];
-// ... code that might throw ...
-delete[] data;  // May never execute!
-
-// ALWAYS: Smart pointers or containers
-auto data = std::make_unique<int[]>(100);
-std::vector<int> data(100);
-```
+See `security-review` skill for detailed patterns, examples, and verification steps.
 
 ## Security Response Protocol
 

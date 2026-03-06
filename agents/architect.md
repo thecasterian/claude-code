@@ -82,26 +82,26 @@ For each design decision, document:
 
 ## Common Patterns
 
-### Frontend Patterns
-- **Component Composition**: Build complex UI from simple components
-- **Container/Presenter**: Separate data logic from presentation
-- **Custom Hooks**: Reusable stateful logic
-- **Context for Global State**: Avoid prop drilling
-- **Code Splitting**: Lazy load routes and heavy components
+### Structural Patterns
+- **PIMPL Idiom**: Hide implementation details, reduce compile dependencies
+- **CRTP**: Static polymorphism without virtual dispatch overhead
+- **Strategy Pattern**: Swappable algorithms via function pointers or virtual interfaces
+- **Factory Pattern**: Centralized object creation with type registration
+- **Observer/Callback**: Decouple event producers from consumers
 
-### Backend Patterns
-- **Repository Pattern**: Abstract data access
-- **Service Layer**: Business logic separation
-- **Middleware Pattern**: Request/response processing
-- **Event-Driven Architecture**: Async operations
-- **CQRS**: Separate read and write operations
+### API Design Patterns
+- **Opaque Pointer**: Public handle hides internal struct (C-style encapsulation)
+- **Error Code Return**: Functions return error codes, output via pointer parameters
+- **Context Object**: Pass configuration/state through a context struct
+- **Plugin Architecture**: Dynamic loading of implementations (dlopen/dlsym)
+- **Builder Pattern**: Step-by-step configuration of complex objects
 
-### Data Patterns
-- **Normalized Database**: Reduce redundancy
-- **Denormalized for Read Performance**: Optimize queries
-- **Event Sourcing**: Audit trail and replayability
-- **Caching Layers**: Redis, CDN
-- **Eventual Consistency**: For distributed systems
+### Data & Memory Patterns
+- **Arena Allocation**: Bulk allocate/free for performance-critical paths
+- **Object Pool**: Reuse frequently allocated/deallocated objects
+- **Copy-on-Write**: Defer copies until mutation is needed
+- **RAII Wrappers**: Tie resource lifetime to scope
+- **Smart Pointer Ownership**: unique_ptr for exclusive, shared_ptr for shared ownership
 
 ## Architecture Decision Records (ADRs)
 
@@ -182,30 +182,5 @@ Watch for these architectural anti-patterns:
 - **Magic**: Unclear, undocumented behavior
 - **Tight Coupling**: Components too dependent
 - **God Object**: One class/component does everything
-
-## Project-Specific Architecture (Example)
-
-Example architecture for an AI-powered SaaS platform:
-
-### Current Architecture
-- **Frontend**: Next.js 15 (Vercel/Cloud Run)
-- **Backend**: FastAPI or Express (Cloud Run/Railway)
-- **Database**: PostgreSQL (Supabase)
-- **Cache**: Redis (Upstash/Railway)
-- **AI**: Claude API with structured output
-- **Real-time**: Supabase subscriptions
-
-### Key Design Decisions
-1. **Hybrid Deployment**: Vercel (frontend) + Cloud Run (backend) for optimal performance
-2. **AI Integration**: Structured output with Pydantic/Zod for type safety
-3. **Real-time Updates**: Supabase subscriptions for live data
-4. **Immutable Patterns**: Spread operators for predictable state
-5. **Many Small Files**: High cohesion, low coupling
-
-### Scalability Plan
-- **10K users**: Current architecture sufficient
-- **100K users**: Add Redis clustering, CDN for static assets
-- **1M users**: Microservices architecture, separate read/write databases
-- **10M users**: Event-driven architecture, distributed caching, multi-region
 
 **Remember**: Good architecture enables rapid development, easy maintenance, and confident scaling. The best architecture is simple, clear, and follows established patterns.

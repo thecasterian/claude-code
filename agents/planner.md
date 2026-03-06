@@ -62,13 +62,13 @@ Create detailed steps with:
 ## Implementation Steps
 
 ### Phase 1: [Phase Name]
-1. **[Step Name]** (File: path/to/file.ts)
+1. **[Step Name]** (File: path/to/file)
    - Action: Specific action to take
    - Why: Reason for this step
    - Dependencies: None / Requires step X
    - Risk: Low/Medium/High
 
-2. **[Step Name]** (File: path/to/file.ts)
+2. **[Step Name]** (File: path/to/file)
    ...
 
 ### Phase 2: [Phase Name]
@@ -174,7 +174,7 @@ Stripe Checkout, and webhook events keep subscription status in sync.
 - [ ] Webhook correctly syncs subscription status
 - [ ] Free users cannot access Pro features
 - [ ] Downgrade/cancellation works correctly
-- [ ] All tests pass with 80%+ coverage
+- [ ] All tests pass
 ````
 
 ## When Planning Refactors

@@ -17,7 +17,6 @@ Located in `~/.claude/agents/`:
 
 ## Immediate Agent Usage
 
-No user prompt needed:
 1. Feature requests - Use **planner** agent
 2. Code just written/modified - Use **code-reviewer** agent
 3. Bug fix or new feature - Use **tdd-guide** agent
