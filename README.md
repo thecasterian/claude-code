@@ -7,6 +7,17 @@
 /plugin marketplace add team-attention/plugins-for-claude-natives
 /plugin install clarify
 ```
+- `clangd-lsp` — C/C++ language server providing code intelligence, diagnostics, and formatting
+```bash
+# Install (requires clangd on PATH)
+/plugin install clangd-lsp
+
+# Install clangd if not present
+# macOS: brew install llvm
+# Ubuntu/Debian: sudo apt install clangd
+# Fedora: sudo dnf install clang-tools-extra
+# Arch Linux: sudo pacman -S clang
+```
 
 ## MCPs
 
