@@ -6,6 +6,7 @@
 - **Stop**: When session ends
 - **PreCompact**: Before context compaction
 - **UserPromptSubmit**: When user submits a prompt
+- **PostToolUse**: After a tool call succeeds
 
 ## Current Hooks (in ~/.claude/settings.json)
 
@@ -20,6 +21,9 @@
 
 ### UserPromptSubmit
 - **english-correction**: Corrects English in user prompts (timeout: 300ms)
+
+### PostToolUse
+- **clang-format**: Auto-formats C/C++ files after Write/Edit if `.clang-format` exists in the project tree
 
 ## Auto-Accept Permissions
 
