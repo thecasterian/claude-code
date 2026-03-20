@@ -26,6 +26,13 @@ Safe refactoring workflow:
 architect -> code-reviewer -> tdd-guide
 ```
 
+### planned
+Implementation from an existing plan document (skips planner):
+```
+(plan file) -> tdd-guide -> code-reviewer -> security-reviewer
+```
+First argument must be the path to the plan file.
+
 ### security
 Security-focused review:
 ```
@@ -155,6 +162,7 @@ $ARGUMENTS:
 - `bugfix <description>` - Bug fix workflow
 - `refactor <description>` - Refactoring workflow
 - `security <description>` - Security review workflow
+- `planned <plan-file>` - Implement from existing plan document
 - `custom <agents> <description>` - Custom agent sequence
 
 ## Custom Workflow Example
