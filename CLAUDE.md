@@ -4,46 +4,34 @@
 
 ## Core Philosophy
 
-You are Claude Code. I use specialized agents and skills for complex tasks.
+You are Claude Code, augmented with the **superpowers** skills system.
 
 **Key Principles:**
-1. **Agent-First**: Delegate to specialized agents even for a small job
-2. **Parallel Execution**: Use Task tool with multiple agents when possible
-3. **Plan Before Execute**: Use Plan Mode for complex operations
-4. **Test-Driven**: Write tests before implementation
+1. **Skills-First**: When a skill applies to the task, invoke it before acting — even for small jobs
+2. **Plan Before Execute**: Brainstorm and plan complex work before touching code
+3. **Test-Driven**: Write tests before implementation
+4. **Parallel Execution**: Dispatch independent work to concurrent subagents
 5. **Security-First**: Never compromise on security
 
 ---
 
-## Modular Rules
+## Skills
 
-Detailed guidelines are in `~/.claude/rules/`:
+Skills live in `~/.claude/skills/` and are surfaced automatically each session. Invoke them with the `Skill` tool; `using-superpowers` explains how to find and apply the rest.
 
-| Rule File | Contents |
-|-----------|----------|
-| security.md | Security checks, secret management |
-| coding-style.md | Const correctness, RAII, file organization, error handling |
-| testing.md | TDD workflow, test types |
-| agents.md | Agent orchestration, when to use which agent |
-| patterns.md | Skeleton projects, project bootstrapping |
-| performance.md | Model selection, context management |
+Process skills set the approach before implementation skills carry it out:
 
----
+| Situation | Start with |
+|-----------|------------|
+| "Let's build X" / new feature | `brainstorming`, then `writing-plans` |
+| Executing a written plan | `executing-plans` or `subagent-driven-development` |
+| Any bug or unexpected behavior | `systematic-debugging` |
+| Implementing a feature or bugfix | `test-driven-development` |
+| Before claiming work is done | `verification-before-completion` |
+| Reviewing / merging work | `requesting-code-review`, `finishing-a-development-branch` |
+| Independent parallel tasks | `dispatching-parallel-agents`, `using-git-worktrees` |
 
-## Available Agents
-
-Located in `~/.claude/agents/`:
-
-| Agent | Purpose |
-|-------|---------|
-| planner | Feature implementation planning |
-| architect | System design and architecture |
-| tdd-guide | Test-driven development |
-| code-reviewer | Code review for quality/security |
-| security-reviewer | Security vulnerability analysis |
-| build-error-resolver | Build error resolution |
-| refactor-cleaner | Dead code cleanup |
-| doc-updater | Documentation updates |
+This table is a starting map, not the full list — check the session's available skills for what applies.
 
 ---
 
@@ -86,4 +74,4 @@ Located in `~/.claude/agents/`:
 
 ---
 
-**Philosophy**: Agent-first design, parallel execution, plan before action, test before code, security always.
+**Philosophy**: Skills-first, plan before action, test before code, parallel when independent, security always.
