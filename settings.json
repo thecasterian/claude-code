@@ -11,6 +11,10 @@
       "Bash(git -C * log *)",
       "Bash(git diff *)",
       "Bash(git -C * diff *)",
+      "Bash(git add *)",
+      "Bash(git -C * add *)",
+      "Bash(git commit *)",
+      "Bash(git -C * commit *)",
       "Bash(git branch *)",
       "Bash(git -C * branch *)",
       "Bash(git stash*)",
@@ -61,6 +65,10 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/memory-persistence/session-start.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/superpowers/session-start.sh"
           }
         ]
       }
@@ -118,9 +126,8 @@
   "enabledPlugins": {
     "learning-output-style@claude-plugins-official": true,
     "clarify@team-attention-plugins": true,
-    "clangd-lsp@claude-plugins-official": true
+    "clangd-lsp@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true
   },
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
-  }
+  "effortLevel": "high"
 }
