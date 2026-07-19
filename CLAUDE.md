@@ -79,6 +79,7 @@ Located in `~/.claude/agents/`:
 - If the uncommitted changes are unrelated, split them into multiple commits
 - Include the brief list of changes only in the PR body
 - Attach appropriate labels when creating an issue or a PR
+- When locally merging a same-day branch into main, prefer a squash merge to keep the contribution graph clean
 
 ### MCPs
 - Always use Context7 MCP for library/API documentation, code generation, setup or configuration steps without asking explicitly
