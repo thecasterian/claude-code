@@ -55,7 +55,7 @@ This table is a starting map, not the full list — check the session's availabl
 - When proposing a design or adding new structs/classes, do not add objects to parent structs or reference types that don't exist without checking
 
 ### System
-- Defult shell is **zsh**
+- The shell is **zsh**: quote globs and brackets
 - Prefer absolute paths rather than relative paths
 - When working with file paths containing non-ascii characters, never transliterate, URL-encode, or mangle them
 - Use the exact Unicode characters in all path operations, including when spawning sub-agents
@@ -69,6 +69,9 @@ This table is a starting map, not the full list — check the session's availabl
 - Include the brief list of changes only in the PR body
 - Attach appropriate labels when creating an issue or a PR
 - When locally merging a same-day branch into main, prefer a squash merge to keep the contribution graph clean
+
+### Documentation
+- Handoff documents are always plain markdown files in the repo, never Claude Docs artifacts
 
 ### MCPs
 - Always use Context7 MCP for library/API documentation, code generation, setup or configuration steps without asking explicitly if it is available
