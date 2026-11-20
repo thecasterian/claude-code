@@ -3,13 +3,6 @@
 # Read JSON input from stdin
 input=$(cat)
 
-# Extract session ID from session_id field and strip .jsonl extension
-session_id=$(echo "$input" | jq -r '.session_id // empty')
-session_name=""
-if [ -n "$session_id" ]; then
-    session_name="${session_id%.jsonl}"
-fi
-
 # Extract workspace info
 current_dir=$(echo "$input" | jq -r '.workspace.current_dir // empty')
 dir_name="${current_dir##*/}"
@@ -24,7 +17,7 @@ duration_ms=$(echo "$input" | jq -r '.cost.total_duration_ms // 0')
 # Function to generate a bar graph from a percentage (0-100)
 generate_bar_graph() {
     local pct=$1
-    local bar_width=10
+    local bar_width=15
     local pct_int=${pct%.*}
 
     # Clamp to 0-100
@@ -45,7 +38,8 @@ generate_bar_graph() {
 USAGE_CACHE="/tmp/claude-statusline-usage-cache"
 CACHE_MAX_AGE=30
 
-get_five_hour_utilization() {
+# Refresh the cached usage API response if older than CACHE_MAX_AGE
+refresh_usage_cache() {
     local cache_stale=1
     if [ -f "$USAGE_CACHE" ]; then
         local cache_age=$(( $(date +%s) - $(stat -c %Y "$USAGE_CACHE" 2>/dev/null || echo 0) ))
@@ -68,12 +62,28 @@ get_five_hour_utilization() {
         fi
     fi
 
-    if [ -f "$USAGE_CACHE" ]; then
-        jq -r '.five_hour.utilization // empty' "$USAGE_CACHE" 2>/dev/null
-    fi
 }
 
-five_hour_pct=$(get_five_hour_utilization)
+# Read a window's utilization (e.g. five_hour, seven_day) from the cache
+get_utilization() {
+    [ -f "$USAGE_CACHE" ] && jq -r ".$1.utilization // empty" "$USAGE_CACHE" 2>/dev/null
+}
+
+# Read a window's reset time (ISO 8601) from the cache
+get_resets_at() {
+    [ -f "$USAGE_CACHE" ] && jq -r ".$1.resets_at // empty" "$USAGE_CACHE" 2>/dev/null
+}
+
+# Format an ISO 8601 reset time in local time: <iso> <date format>
+format_reset() {
+    [ -n "$1" ] && [ "$1" != "null" ] && LC_TIME=C date -d "$1" +"$2" 2>/dev/null
+}
+
+refresh_usage_cache
+five_hour_pct=$(get_utilization five_hour)
+seven_day_pct=$(get_utilization seven_day)
+five_hour_reset=$(format_reset "$(get_resets_at five_hour)" '%H:%M')
+seven_day_reset=$(format_reset "$(get_resets_at seven_day)" '%a %H:%M')
 
 # ANSI color helpers
 color_for_pct() {
@@ -88,11 +98,6 @@ RESET=$'\033[0m'
 
 # Build status line parts
 status_parts=()
-
-# Session name
-if [ -n "$session_name" ]; then
-    status_parts+=("Session: $session_name")
-fi
 
 # Path and git branch
 if [ -n "$dir_name" ]; then
@@ -115,20 +120,28 @@ else
     status_parts+=("Context: ${bar}")
 fi
 
-# 5-hour rolling window bar
-if [ -n "$five_hour_pct" ] && [ "$five_hour_pct" != "null" ]; then
-    five_bar=$(generate_bar_graph "$five_hour_pct")
-    five_hour_int=${five_hour_pct%.*}
-    fh_color=$(color_for_pct "$five_hour_int")
-    if [ -n "$fh_color" ]; then
-        status_parts+=("${fh_color}5h limit: ${five_bar} ${five_hour_int}%${RESET}")
+# Rate limit bar: add_limit_part <label> <pct> [reset time]
+add_limit_part() {
+    local label=$1 pct=$2 reset=$3
+    local reset_suffix=""
+    [ -n "$reset" ] && reset_suffix=" (${reset})"
+    if [ -n "$pct" ] && [ "$pct" != "null" ]; then
+        local pct_int=${pct%.*}
+        local lbar color
+        lbar=$(generate_bar_graph "$pct_int")
+        color=$(color_for_pct "$pct_int")
+        if [ -n "$color" ]; then
+            status_parts+=("${color}${label}: ${lbar} ${pct_int}%${reset_suffix}${RESET}")
+        else
+            status_parts+=("${label}: ${lbar} ${pct_int}%${reset_suffix}")
+        fi
     else
-        status_parts+=("5h limit: ${five_bar} ${five_hour_int}%")
+        status_parts+=("${label}: $(generate_bar_graph 0)")
     fi
-else
-    five_bar=$(generate_bar_graph 0)
-    status_parts+=("5h limit: ${five_bar}")
-fi
+}
+
+add_limit_part "5h limit" "$five_hour_pct" "$five_hour_reset"
+add_limit_part "Weekly limit" "$seven_day_pct" "$seven_day_reset"
 
 # Current session: duration
 duration_sec=$((duration_ms / 1000))
